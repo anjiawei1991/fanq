@@ -1,0 +1,39 @@
+# deployment 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ssserver
+spec:
+  selector:
+    matchLabels:
+      run: ssserver
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        run: ssserver
+    spec:
+      containers:
+      - name: ssserver
+        image: anjiawei/ssserver
+        ports:
+        - containerPort: 8388
+        env:
+        - name: SS_PASSWD 
+          value: abcdefg  
+
+---
+
+# service
+apiVersion: v1
+kind: Service 
+metadata:
+  name: ssserver
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 449
+    protocol: TCP
+    targetPort: 8388
+  selector:
+    run: ssserver 
